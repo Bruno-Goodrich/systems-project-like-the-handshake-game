@@ -13,7 +13,8 @@ const Patient: FC<{ patient: Patient }> = ({ patient }) => {
       className="patient"
       style={{ left: `${patient.x}%`, top: `${patient.y}%` }}
     >
-      {patient.infected ? "🤢" : "😀"}
+      {patient.infected ? "🤢" : ""}
+      {patient.vaccianted ? "🥶":"😀"}
     </div>
   );
 };
