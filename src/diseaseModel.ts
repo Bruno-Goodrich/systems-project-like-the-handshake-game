@@ -26,7 +26,6 @@ const updatePatient = (
   patient: Patient,
   population: Patient[],
   params: SimulationParameters,
-  vaccineHelp = 80
 ): Patient => {
   let updatedPatient = { ...patient };
   // IF we are NOT sick, see if our neighbors are sick...
@@ -35,8 +34,14 @@ const updatePatient = (
   if (partner.infected && 100*Math.random() < params.infectionChance) {          
     updatedPatient = { ...patient, infected : true };
   } 
-  if (patient.vaccianted){
-    updatedPatient = {...patient, infected :false}
+  if (patient.vaccianted=true && Math.random()*100>params.vaccineProtecion){
+      updatedPatient= {...patient, infected : true} 
+  }
+  else{
+    if (Math.random()*100>10){
+      updatedPatient = {}
+    }
+    updatedPatient = {...patient, infected: false}
   }
   return updatedPatient;
 };
