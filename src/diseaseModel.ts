@@ -10,16 +10,29 @@ export const createPopulation = (size = 1600) => {
       x: (100 * (i % sideSize)) / sideSize, // X-coordinate within 100 units
       y: (100 * Math.floor(i / sideSize)) / sideSize, // Y-coordinate scaled similarly
       infected: false,
-      vaccianted: true,
+      vaccinated: false,
     });
   }
   // Infect patient zero...
   let patientZero = population[Math.floor(Math.random() * size)];
   patientZero.infected = true;
+
   return population;
 };
 
-
+const vaccinate = (population : Patient[], params : SimulationParameters) =>{
+  //get unvaxxed patients from population
+  let unvaxxed = population.filter(
+    (p) =>!p.vaccinated
+  )
+  if (unvaxxed.length == 0){
+    return null
+  }
+  else{
+    let randomIndex= Math.floor(Math.random()*unvaxxed.length)
+    unvaxxed[randomIndex].vaccinated = true
+  }
+}
 
 
 const updatePatient = (
@@ -34,13 +47,13 @@ const updatePatient = (
   if (partner.infected && 100*Math.random() < params.infectionChance) {          
     updatedPatient = { ...patient, infected : true };
   } 
-  if (patient.vaccianted=true && Math.random()*100>params.vaccineProtecion){
+  if (patient.vaccinated==true && Math.random()*100>params.vaccineProtecion){
       updatedPatient= {...patient, infected : true} 
   }
   else{
-    if (Math.random()*100>10){
+    /*if (Math.random()*100>10){
       updatedPatient = {}
-    }
+    }*/
     updatedPatient = {...patient, infected: false}
   }
   return updatedPatient;
@@ -51,7 +64,13 @@ export const updatePopulation = (
   params: SimulationParameters
 ): Patient[] => {
   // Run updatePatient once per patient to create *new* patients for new round.
-  return population.map((patient) =>
+  let newPopulation = population.map((patient) =>
     updatePatient(patient, population, params)
   );
+  for (let i=0; i<10;i++){
+    vaccinate(newPopulation, params)
+  }
+
+
+  return newPopulation;
 };

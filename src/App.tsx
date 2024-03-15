@@ -14,6 +14,7 @@ const Patient: FC<{ patient: Patient }> = ({ patient }) => {
       style={{ left: `${patient.x}%`, top: `${patient.y}%` }}
     >
       {patient.infected ? "🤢" : "😀"}
+      {patient.vaccinated ? "V" : ""}
       
     </div>
   );
