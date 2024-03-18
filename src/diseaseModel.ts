@@ -10,7 +10,9 @@ export const createPopulation = (size = 1600) => {
       x: (100 * (i % sideSize)) / sideSize, // X-coordinate within 100 units
       y: (100 * Math.floor(i / sideSize)) / sideSize, // Y-coordinate scaled similarly
       infected: false,
+      infectious: false,
       vaccinated: false,
+      daysInfected : 0
     });
   }
   // Infect patient zero...
@@ -19,6 +21,8 @@ export const createPopulation = (size = 1600) => {
 
   return population;
 };
+
+let roundCounter = 0
 
 const vaccinate = (population : Patient[], params : SimulationParameters) =>{
   //get unvaxxed patients from population
@@ -40,22 +44,33 @@ const updatePatient = (
   population: Patient[],
   params: SimulationParameters,
 ): Patient => {
-  let updatedPatient = { ...patient };
+  let updatedPatient : Patient = { ...patient };
   // IF we are NOT sick, see if our neighbors are sick...
   // choose a partner
   const partner = population[Math.floor(Math.random() * population.length)];
-  if (partner.infected && 100*Math.random() < params.infectionChance) {          
+  if (partner.infectious && 100*Math.random() < params.infectionChance) {          
     updatedPatient = { ...patient, infected : true };
   } 
-  if (patient.vaccinated==true && Math.random()*100>params.vaccineProtecion){
-      updatedPatient= {...patient, infected : true} 
+  if (partner.infectious && patient.vaccinated==true && Math.random()*100>80){
+      updatedPatient= {...patient, infected : true};
   }
-  else{
-    /*if (Math.random()*100>10){
-      updatedPatient = {}
-    }*/
-    updatedPatient = {...patient, infected: false}
+  if (updatedPatient.infected) {
+    // Add one to counter each day we are infected
+    updatedPatient.daysInfected += 1;
   }
+  // If infected more than 5 days, we become infectious
+  if (updatedPatient.daysInfected > 5){
+   updatedPatient.infectious = true;
+  }
+  // if Infected more than 14 days, we stop being infectious
+  if (updatedPatient.daysInfected > 14) {
+    updatedPatient.infectious = false;
+  }
+  // If infected more than 3-4 months, we can be infected again...
+  if (updatedPatient.daysInfected > 30 * 3) {
+    updatedPatient.infected = false;
+  }
+
   return updatedPatient;
 };
 
@@ -70,7 +85,7 @@ export const updatePopulation = (
   for (let i=0; i<10;i++){
     vaccinate(newPopulation, params)
   }
-
-
+  roundCounter ++
+  
   return newPopulation;
 };

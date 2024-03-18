@@ -4,7 +4,7 @@ import {
   type Patient,
   type SimulationParameters,
 } from "./types";
-import { createPopulation, updatePopulation } from "./diseaseModel";
+import { createPopulation, updatePopulation, roundCounter } from "./diseaseModel";
 import { LineChart, Line, YAxis, XAxis } from "recharts";
 
 const Patient: FC<{ patient: Patient }> = ({ patient }) => {
@@ -13,8 +13,8 @@ const Patient: FC<{ patient: Patient }> = ({ patient }) => {
       className="patient"
       style={{ left: `${patient.x}%`, top: `${patient.y}%` }}
     >
-      {patient.infected ? "🤢" : "😀"}
-      {patient.vaccinated ? "V" : ""}
+      {patient.infectious ? "🤢" : "😀"}
+      {patient.vaccinated ? "💉" : ""}
       
     </div>
   );
@@ -117,7 +117,7 @@ const App: FC = () => {
   useEffect(() => {
     if (autoMode) {
       console.log("Automatically run the next one in a half a sec");
-      setTimeout(runTurn, 500);
+      setTimeout(runTurn, 100);
     }
   }, [autoMode, population]);
 

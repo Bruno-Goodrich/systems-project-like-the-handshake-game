@@ -3,7 +3,9 @@ export type Patient = {
   x: number;
   y: number;
   infected: boolean;
+  infectious : boolean;
   vaccinated: boolean;
+  daysInfected : 0;
 };
 
 export type SimulationParameters = {  
