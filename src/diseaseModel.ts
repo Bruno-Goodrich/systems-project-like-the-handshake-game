@@ -51,7 +51,7 @@ const updatePatient = (
   if (partner.infectious && 100*Math.random() < params.infectionChance) {          
     updatedPatient = { ...patient, infected : true };
   } 
-  if (partner.infectious && patient.vaccinated==true && Math.random()*100>80){
+  if (partner.infectious && patient.vaccinated==true && Math.random()*100>params.vaccineProtecion){
       updatedPatient= {...patient, infected : true};
   }
   if (updatedPatient.infected) {

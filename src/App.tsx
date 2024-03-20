@@ -60,6 +60,32 @@ const Settings: FC<{
             })
           }
         />
+        <label>Vaccine protection:</label>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          value={parameters.vaccineProtecion}
+          onChange={(e) =>
+            setParameters({
+              ...parameters,
+              vaccineProtecion: parseFloat(e.target.value),
+            })
+          }
+        />
+        <input
+          type="number"
+          min="0"
+          max="100"
+          value={parameters.vaccineProtecion}
+          onChange={(e) =>
+            setParameters({
+              ...parameters,
+              vaccineProtecion: parseFloat(e.target.value),
+            })
+          }
+        />
       </div>
     </section>
   );
@@ -80,14 +106,11 @@ const App: FC = () => {
 
   useEffect(() => {
     // Each time the population changes, we add an item to our disease...
-    let infectedCount = population.filter((p) => p.infected).length;
-    let oldInfectedCount =
-      diseaseData.length > 0 ? diseaseData[diseaseData.length - 1].infected : 0;
     setDiseaseData([
       ...diseaseData,
       {
-        infected: infectedCount,
-        newInfections: infectedCount - oldInfectedCount,
+        infected: population.filter((p) => p.infected).length,
+        newInfections:  population.filter((p) => p.daysInfected==1).length,
         total: population.length,
         round: diseaseData.length,
       },
